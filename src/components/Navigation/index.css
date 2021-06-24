@@ -1,0 +1,57 @@
+.navigation {
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+}
+
+.navigation__link {
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.navigation__link_active {
+  font-weight: 500;
+}
+
+.navigation__li {
+  margin-right: 20px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navigation__li:last-of-type {
+  margin-right: 0px;
+}
+
+.navigation__profile-btn {
+  margin-left: 17px;
+  background: #313131;
+  border-radius: 4px;
+  width: 26px;
+  height: 30px;
+  background-image: url("../../images/profile_icon.svg");
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+
+.navigation__signup {
+  margin-right: 30px;
+}
+.navigation__signin {
+  background-color: #3ddc84;
+  width: 76px;
+  height: 32px;
+  border-radius: 3px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  box-sizing: border-box;
+}
+
+.navigation__signin .navigation__link {
+  color: black;
+  text-align: center;
+}

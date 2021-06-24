@@ -1,0 +1,24 @@
+.movie-list {
+  padding-top: 70px;
+  padding-bottom: 80px;
+}
+
+.movie-list__more {
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+  background: #2f2f2f;
+  border-radius: 6px;
+  width: 100%;
+  border: none;
+  height: 36px;
+  margin-top: 50px;
+}
+
+.movie-list__cards{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px 30px;
+  padding-bottom: 30px;
+}

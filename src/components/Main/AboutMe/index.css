@@ -1,0 +1,53 @@
+.about-me {
+  padding-top: 110px;
+  padding-bottom: 50px;
+}
+.about-me__list {
+  display: flex;
+}
+
+.about-me__list-item {
+  margin-right: 20px;
+}
+
+.about-me__list-item:last-of-type {
+  margin-right: 0px;
+}
+
+.about-me__wrapper {
+  padding-top: 66px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.about-me__info {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+}
+
+.about-me__name {
+  font-size: 50px;
+  line-height: 58px;
+  letter-spacing: -0.04em;
+  text-align: start;
+  margin-bottom: 18px;
+}
+
+.about-me__whois {
+  font-size: 18px;
+  line-height: 20px;
+  text-align: start;
+  margin-bottom: 26px;
+}
+
+.about-me__biography {
+  font-size: 14px;
+  line-height: 22px;
+  text-align: start;
+  margin-bottom: 99px;
+}
+
+.about-me__photo{
+  border-radius: 10px;
+}
