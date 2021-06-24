@@ -25,6 +25,13 @@
   }
 }
 
+@media screen and (max-width: 800px) {
+
+  .promo__heading {
+    max-width: 680px;
+  }
+}
+
 .promo__wrapper {
   padding-top: 160px;
   padding-bottom: 121px;
