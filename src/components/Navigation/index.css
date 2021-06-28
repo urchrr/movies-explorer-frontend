@@ -9,6 +9,7 @@
   line-height: 16px;
   font-weight: 400;
   text-align: center;
+  text-decoration: none;
 }
 
 .navigation__link_active {
@@ -24,7 +25,7 @@
 }
 
 .navigation__li:last-of-type {
-  margin-right: 0px;
+  margin-right: 0;
 }
 
 .navigation__profile-btn {

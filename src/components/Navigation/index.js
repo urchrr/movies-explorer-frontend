@@ -4,16 +4,17 @@ import useWindowDimensions from "../../utils/useWindowDimensions";
 
 function Navigation() {
   const location = useLocation();
-  const { height, width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   return (
     <div>
-            {/* <p className='page__font'>{width}</p> */}
+            <p className='page__font'>{width}</p>
       <Route exact path="/">
         <ul className="navigation">
           <li
             className="navigation__li navigation__signup"
             style={{ marginRight: "30px" }}
           >
+
             <Link
               className="navigation__link page__font page__font_weight_bold"
               to="/signup"
@@ -77,11 +78,16 @@ function Navigation() {
                 >
                   Аккаунт
                 </p>
-                <button className="navigation__profile-btn page__button"></button>
+                <button className="navigation__profile-btn page__button">{""}</button>
               </Link>
             </li>
           </ul>
         )}
+        {/* {
+          width < 960 && (
+
+          )
+        } */}
       </Route>
     </div>
   );

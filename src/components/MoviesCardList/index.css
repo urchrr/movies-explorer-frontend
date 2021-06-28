@@ -16,9 +16,23 @@
   margin-top: 50px;
 }
 
-.movie-list__cards{
+.movie-list__cards {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+
   gap: 24px 30px;
   padding-bottom: 30px;
+}
+
+@media screen and (max-width: 1070px) {
+  .movie-list__cards {
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
+  }
+}
+
+@media screen and (max-width: 728px) {
+  .movie-list__cards {
+    grid-template-columns: repeat(1, minmax(300px, 1fr));
+    gap: 16px 30px;
+  }
 }
