@@ -2,6 +2,13 @@
   display: flex;
   padding-left: 0;
   list-style: none;
+  margin: 0;
+}
+
+.navigation__auth {
+  display: flex;
+  padding-left: 0;
+  list-style: none;
 }
 
 .navigation__link {
@@ -12,7 +19,7 @@
   text-decoration: none;
 }
 
-.navigation__profile-link{
+.navigation__profile-link {
   display: inline-block;
   font-weight: 500;
   font-size: 14px;
@@ -63,31 +70,6 @@
   text-align: center;
 }
 
-@media screen and (max-width: 960px) {
-  .navigation {
-    flex-direction: column;
-  }
-
-  .navigation__li #saved-movies-but {
-    margin-right: 0;
-    margin-bottom: 0;
-  }
-
-  .navigation__li {
-    margin-bottom: 28px;
-    margin-right: 0;
-  }
-
-  .navigation__li:last-of-type {
-    margin-right: 0;
-  }
-
-  .navigation__link {
-    text-align: center;
-    font-size: 18px;
-    line-height: 22px;
-  }
-}
 
 .navigation__li #saved-movies-but {
   margin-right: 50px;
@@ -141,16 +123,10 @@
 
 .navigation__menu-wrapper {
   box-sizing: border-box;
-  padding-top: 159px;
-  padding-bottom: 92px;
-  width: 67.7%;
-  margin-left: 32.3%;
-  height: 100%;
-  background: #202020;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  width: 381px;
 }
 
 .navigation__menu-exit {
@@ -163,5 +139,45 @@
   background-image: url("../../images/exit_icon.svg");
   background-color: inherit;
   background-position: 50% 50%;
+}
+
+@media screen and (max-width: 960px) {
+  .navigation {
+    flex-direction: column;
+  }
+
+  .navigation__menu-wrapper {
+    box-sizing: border-box;
+    padding-top: 159px;
+    padding-bottom: 92px;
+    width: 67.7%;
+    margin-left: 32.3%;
+    height: 100%;
+    background: #202020;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .navigation__li #saved-movies-but {
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+
+  .navigation__li {
+    margin-bottom: 28px;
+    margin-right: 0;
+  }
+
+  .navigation__li:last-of-type {
+    margin-right: 0;
+  }
+
+  .navigation__link {
+    text-align: center;
+    font-size: 18px;
+    line-height: 22px;
+  }
 }
 

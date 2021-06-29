@@ -24,32 +24,12 @@ code {
 }
 
 .page__section {
-  /* padding-left: 70px;
-  padding-right: 70px; */
-  max-width: 1140px;
+  box-sizing: border-box;
+  max-width: calc(1280px - 140px);
   width: 100%;
   min-width: 320px;
 }
 
-@media screen and (max-width: 1280px) {
-  .page__section {
-    max-width: calc(100% - 140px);
-  }
-
-  .page__section_heading {
-
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .page__section {
-    max-width: calc(100% - 100px);
-  }
-
-  .page__section_heading {
-
-  }
-}
 
 .page__section_heading {
   font-size: 22px;
@@ -93,4 +73,22 @@ code {
   background-color: transparent;
   border: none;
   outline: none;
+}
+
+@media screen and (max-width: 1270px) {
+  .page__section {
+    max-width: calc(100% - 60px);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .page__section {
+    max-width: calc(100% - 60px);
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .page__section {
+    max-width: calc(100% - 20px);
+  }
 }

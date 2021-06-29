@@ -6,7 +6,7 @@ import {useState} from "react";
 function Navigation() {
   const [showMenu, setShowMenu] = useState(false)
   const location = useLocation();
-  const {height, width} = useWindowDimensions();
+  const { width} = useWindowDimensions();
   const handleMenu = () => {
     setShowMenu(!showMenu);
   }
@@ -54,31 +54,31 @@ function Navigation() {
           </li>
         </ul>
 
-          <Link
-            className="navigation__profile-link"
-            to="/profile"
-            style={{display: "flex", alignItems: "center"}}
+        <Link
+          className="navigation__profile-link"
+          to="/profile"
+          style={{display: "flex", alignItems: "center"}}
+        >
+          <p
+            style={{
+              fontWeight:
+                location.pathname === "/profile" ? "500" : "400",
+            }}
+            className="navigation__link page__font"
           >
-            <p
-              style={{
-                fontWeight:
-                  location.pathname === "/profile" ? "500" : "400",
-              }}
-              className="navigation__link page__font"
-            >
-              Аккаунт
-            </p>
-            <button className="navigation__profile-btn page__button">{""}</button>
-          </Link>
+            Аккаунт
+          </p>
+          <button className="navigation__profile-btn page__button">{""}</button>
+        </Link>
 
       </>
     )
   }
   return (
     <div>
-      <p className='page__font'>{`${width} ${height}`}</p>
+      {/*<p className='page__font'>{`${width} ${height}`}</p>*/}
       <Route exact path="/">
-        <ul className="navigation">
+        <ul className="navigation__auth">
           <li
             className="navigation__li navigation__signup"
             style={{marginRight: "30px"}}
@@ -102,7 +102,9 @@ function Navigation() {
       </Route>
       <Route path={["/movies", "/saved-movies", "/profile"]}>
         {width >= 960 && (
-          <Menu/>
+          <div className={`navigation__menu-wrapper`}>
+            <Menu/>
+          </div>
         )}
         {
           width < 960 && (
