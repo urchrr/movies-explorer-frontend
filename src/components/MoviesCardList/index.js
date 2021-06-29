@@ -9,7 +9,7 @@ const MoviesList = () => {
   };
   const cards = () => {
     const c = [];
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 12; i++) {
       c.push(card);
     }
     return c;

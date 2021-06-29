@@ -19,7 +19,6 @@
 .movie-list__cards {
   display: grid;
   grid-template-columns: repeat(3, minmax(300px, 1fr));
-
   gap: 24px 30px;
   padding-bottom: 30px;
 }
