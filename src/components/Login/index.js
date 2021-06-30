@@ -1,13 +1,13 @@
 import "../auth.css";
 import Logo from "../Logo";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 const Login = () => {
   return (
     <section className="auth">
       <div className="auth__wrapper">
         <div className="auth__logo">
-          <Logo />
+          <Logo/>
         </div>
         <h2 className="auth__title page__font page__font_weight_bold">
           Рады видеть!
@@ -20,6 +20,7 @@ const Login = () => {
             E-mail
           </label>
           <input
+            autoComplete={`off`}
             className="auth__input page__font page__font_weight_normal"
             id="auth-email"
             type="text"
@@ -32,6 +33,7 @@ const Login = () => {
             Пароль
           </label>
           <input
+            autoComplete={`off`}
             className="auth__input page__font page__font_weight_normal"
             id="auth-pswd"
             type="password"

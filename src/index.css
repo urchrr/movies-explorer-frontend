@@ -27,9 +27,15 @@ code {
   box-sizing: border-box;
   max-width: calc(1280px - 140px);
   width: 100%;
-  min-width: 320px;
+  min-width: 290px;
 }
 
+.page__header-footer {
+  box-sizing: border-box;
+  max-width: calc(1280px - 140px);
+  width: 100%;
+  min-width: 290px;
+}
 
 .page__section_heading {
   font-size: 22px;
@@ -66,6 +72,7 @@ code {
 .page__ul {
   list-style: none;
   padding-left: 0;
+  margin: 0;
 }
 
 .page__button {
@@ -79,16 +86,28 @@ code {
   .page__section {
     max-width: calc(100% - 60px);
   }
-}
 
-@media screen and (max-width: 768px) {
-  .page__section {
+  .page__header-footer {
     max-width: calc(100% - 60px);
   }
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 768px) {
   .page__section {
-    max-width: calc(100% - 20px);
+    max-width: calc(100% - 100px);
+  }
+
+}
+
+@media screen and (max-width: 520px) {
+  .page__section {
+    max-width: calc(100% - 36px);
+  }
+  .page__header-footer {
+    max-width: calc(100% - 15px);
+  }
+  .page__section_heading {
+    font-size: 18px;
+    line-height: 22px;
   }
 }

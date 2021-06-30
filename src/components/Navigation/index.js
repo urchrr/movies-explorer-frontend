@@ -6,7 +6,7 @@ import {useState} from "react";
 function Navigation() {
   const [showMenu, setShowMenu] = useState(false)
   const location = useLocation();
-  const { width} = useWindowDimensions();
+  const {width} = useWindowDimensions();
   const handleMenu = () => {
     setShowMenu(!showMenu);
   }
@@ -17,10 +17,8 @@ function Navigation() {
           {width < 960 &&
           <li className="navigation__li">
             <Link
-              style={{
-                fontWeight: location.pathname === "/" ? "500" : "400",
-              }}
-              className="navigation__link page__font"
+              className={`navigation__link page__font
+              ${location.pathname === "/" ? 'navigation__link_active' : ''}`}
               to="/"
             >
               Главная
@@ -28,10 +26,8 @@ function Navigation() {
           </li>}
           <li className="navigation__li">
             <Link
-              style={{
-                fontWeight: location.pathname === "/movies" ? "500" : "400",
-              }}
-              className="navigation__link page__font"
+              className={`navigation__link page__font
+              ${location.pathname === "/movies" ? 'navigation__link_active' : ''}`}
               to="/movies"
             >
               Фильм
@@ -42,11 +38,8 @@ function Navigation() {
             id={'saved-movies-but'}
           >
             <Link
-              style={{
-                fontWeight:
-                  location.pathname === "/saved-movies" ? "500" : "400",
-              }}
-              className="navigation__link page__font"
+              className={`navigation__link page__font
+              ${location.pathname === "/saved-movies" ? 'navigation__link_active' : ''}`}
               to="/saved-movies"
             >
               Сохраненные фильмы
@@ -60,11 +53,8 @@ function Navigation() {
           style={{display: "flex", alignItems: "center"}}
         >
           <p
-            style={{
-              fontWeight:
-                location.pathname === "/profile" ? "500" : "400",
-            }}
-            className="navigation__link page__font"
+            className={`navigation__link page__font
+              ${location.pathname === "/profile" ? 'navigation__link_active' : ''}`}
           >
             Аккаунт
           </p>
@@ -78,27 +68,20 @@ function Navigation() {
     <div>
       {/*<p className='page__font'>{`${width} ${height}`}</p>*/}
       <Route exact path="/">
-        <ul className="navigation__auth">
-          <li
-            className="navigation__li navigation__signup"
-            style={{marginRight: "30px"}}
+        <div className="navigation__auth">
+          <Link
+            className="navigation__sign-up page__font page__font_weight_bold"
+            to="/signup"
           >
-            <Link
-              className="navigation__link page__font page__font_weight_bold"
-              to="/signup"
-            >
-              Регистрация
-            </Link>
-          </li>
-          <li className="navigation__li navigation__signin">
-            <Link
-              className="navigation__link page__font page__font_weight_bold"
-              to="/signin"
-            >
-              Войти
-            </Link>
-          </li>
-        </ul>
+            Регистрация
+          </Link>
+          <Link
+            className="navigation__sign-in page__font page__font_weight_bold"
+            to="/signin"
+          >
+            Войти
+          </Link>
+        </div>
       </Route>
       <Route path={["/movies", "/saved-movies", "/profile"]}>
         {width >= 960 && (

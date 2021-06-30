@@ -1,18 +1,18 @@
 import "../auth.css";
 import Logo from "../Logo";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
-const auth = () => {
+const Register = () => {
   return (
     <section className="auth">
       <div className="auth__wrapper">
         <div className="auth__logo">
-          <Logo />
+          <Logo/>
         </div>
         <h2 className="auth__title page__font page__font_weight_bold">
           Добро пожаловать!
         </h2>
-        <form className="auth__form">
+        <form className="auth__form" autoComplete={`nope`}>
           <label
             className="auth__label page__font page__font_weight_normal"
             htmlFor="auth-name"
@@ -20,6 +20,7 @@ const auth = () => {
             Имя
           </label>
           <input
+            autoComplete={`nope`}
             className="auth__input page__font page__font_weight_normal"
             type="text"
             id="auth-name"
@@ -32,6 +33,7 @@ const auth = () => {
             E-mail
           </label>
           <input
+            autoComplete={`nope`}
             className="auth__input page__font page__font_weight_normal"
             id="auth-email"
             type="text"
@@ -44,6 +46,7 @@ const auth = () => {
             Пароль
           </label>
           <input
+            autoComplete={`nope`}
             className="auth__input page__font page__font_weight_normal"
             id="auth-pswd"
             type="password"
@@ -67,4 +70,4 @@ const auth = () => {
   );
 };
 
-export default auth;
+export default Register;

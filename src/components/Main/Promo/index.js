@@ -1,4 +1,5 @@
 import "./index.css";
+import NavTab from '../NavTab'
 
 const Promo = () => {
   return (
@@ -7,6 +8,7 @@ const Promo = () => {
         <h1 className="promo__heading page__font page__font_weight_normal">
           Учебный проект студента факультета Веб-разработки.
         </h1>
+        <NavTab/>
       </div>
     </section>
   );

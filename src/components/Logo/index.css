@@ -1,4 +1,4 @@
-.logo{
+.logo {
   position: relative;
   width: 38px;
   height: 38px;
@@ -6,7 +6,7 @@
   background-color: #3ddc84;
 }
 
-.logo::after{
+.logo::after {
   position: absolute;
   content: "";
   top: 11px;
@@ -16,4 +16,10 @@
   background-image: url('../../images/logo.svg');
   background-repeat: no-repeat;
   background-position: 50% 50%;
+}
+
+.logo:hover:after {
+  padding: 3px 3px;
+  border-radius: 50%;
+  transition: padding .1s ease-in-out, outline-color 0ms;
 }
