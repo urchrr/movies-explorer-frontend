@@ -12,6 +12,7 @@
 .auth__logo {
   display: flex;
   justify-content: start;
+  margin-bottom: 40px;
 }
 
 .auth__form {
