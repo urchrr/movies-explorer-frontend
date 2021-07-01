@@ -1,0 +1,37 @@
+.movie-list {
+  padding-top: 70px;
+  padding-bottom: 80px;
+}
+
+.movie-list__more {
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+  background: #2f2f2f;
+  border-radius: 6px;
+  width: 100%;
+  border: none;
+  height: 36px;
+  margin-top: 50px;
+}
+
+.movie-list__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  gap: 24px 30px;
+  padding-bottom: 30px;
+}
+
+@media screen and (max-width: 1070px) {
+  .movie-list__cards {
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
+  }
+}
+
+@media screen and (max-width: 728px) {
+  .movie-list__cards {
+    grid-template-columns: repeat(1, minmax(300px, 1fr));
+    gap: 16px 30px;
+  }
+}

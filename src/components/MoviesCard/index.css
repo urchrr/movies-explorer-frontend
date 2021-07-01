@@ -1,0 +1,55 @@
+.movie-card {
+  background: #222222;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+}
+.movie-card__info {
+  position: relative;
+  padding: 14px;
+}
+.movie-card__title {
+  font-size: 15px;
+  line-height: 18px;
+  text-align: start;
+  margin-bottom: 9px;
+}
+
+.movie-card__length {
+  font-size: 11px;
+  line-height: 13px;
+  color: #8b8b8b;
+  text-align: start;
+  margin-bottom: 14px;
+}
+.movie-card__button {
+  cursor: pointer;
+  position: absolute;
+  top: 19px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  background: #313131;
+  border-radius: 36px;
+  border: none;
+}
+.movie-card__button_save {
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-image: url("../../images/save_icon.svg");
+}
+
+.movie-card__button_save_active {
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-color: #3ddc84;
+  background-image: url("../../images/save_icon_active.svg");
+}
+
+.movie-card__button_delete {
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-image: url("../../images/delete_icon.svg");
+}
+
+.movie-card__img {
+  width: 100%;
+}

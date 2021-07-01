@@ -1,0 +1,136 @@
+.auth {
+  display: flex;
+  justify-content: center;
+  padding-top: 70px;
+  box-sizing: border-box;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.auth__logo {
+  display: flex;
+  justify-content: start;
+  margin-bottom: 40px;
+}
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.auth__wrapper {
+  max-width: 396px;
+  width: calc(100% - 60px);
+  min-width: 290px;
+}
+
+.auth__title {
+  font-size: 24px;
+  line-height: 29px;
+  text-align: start;
+  margin-bottom: 40px;
+}
+
+.auth__label {
+  font-size: 10px;
+  line-height: 12px;
+  color: #8b8b8b;
+  text-align: start;
+  margin-bottom: 10px;
+}
+
+.auth__input {
+  background: #2f2f2f;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  line-height: 16px;
+  height: 46px;
+  box-sizing: border-box;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.auth__input:focus {
+  outline: none;
+  box-shadow: 0 0 3pt 2pt white;
+}
+
+.auth__submit {
+  background: #4285f4;
+  border-radius: 3px;
+  height: 45px;
+  padding-top: 13px;
+  padding-bottom: 15px;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.auth__qstn {
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #8b8b8b;
+}
+
+.auth__link {
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #4285f4;
+}
+
+.auth__error {
+  text-align: start;
+  font-size: 10px;
+  line-height: 12px;
+  color: #ee3465;
+  margin-bottom: 10px;
+}
+
+.auth__submit_register {
+  margin-top: 59px;
+}
+
+.auth__submit_login {
+  margin-top: 157px;
+}
+
+@media screen and (max-width: 960px) {
+  .auth {
+    padding-top: 232px;
+    padding-bottom: 232px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .auth__logo {
+    justify-content: center;
+    margin-bottom: 50px;
+  }
+
+  .auth__title {
+    font-size: 24px;
+    line-height: 29px;
+    text-align: center;
+  }
+
+  .auth__qstn {
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .auth__link {
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .auth__submit {
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+}
