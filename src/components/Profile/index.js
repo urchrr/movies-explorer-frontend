@@ -2,10 +2,7 @@ import "./index.css";
 import {useState} from "react";
 
 const Profile = () => {
-  const [info, setInfo] = useState({
-    name: 'Илья',
-    email: 'pochta@yandex.ru'
-  })
+  const [info, setInfo] = useState({})
   const handleInput = (evt) => {
     const {name, value} = evt.target;
     setInfo({...info, [name]: value})
