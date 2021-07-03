@@ -13,6 +13,7 @@ import * as auth from '../../utils/auth';
 import {useEffect, useState} from "react";
 import {CurrentUserContext, UserAuthContext} from "../../contexts";
 import ProtectedRoute from "../ProtectedRoute";
+import * as api from '../../utils/api'
 
 const App = () => {
   const history = useHistory();
@@ -35,6 +36,16 @@ const App = () => {
     }
   }, [])
 
+  function handleUpdateUser(data) {
+    api
+      .setUserInfo(data)
+      .then((res) => {
+        const {name, email} = res;
+        setCurrentUser({...currentUser, name, email});
+      })
+      .catch((err) => console.log(err));
+  }
+
   function handleSignIn(data) {
     auth
       .authorize(data)
@@ -47,7 +58,7 @@ const App = () => {
             // setUserAuth(res.data);
             setCurrentUser(res.data);
             setLoggedIn(true);
-            history.push('/');
+            history.push('/movies');
             // setInfoTipStatus('success');
             // setInfoToolTiOpen(true);
           })
@@ -72,6 +83,12 @@ const App = () => {
       });
   }
 
+  function handleLogout() {
+    setLoggedIn(false);
+    history.push('/');
+    localStorage.setItem('token', '');
+  }
+
   return (
     // <div className="App">
     <>
@@ -93,7 +110,9 @@ const App = () => {
             <ProtectedRoute
               path={'/profile'}
               component={Profile}
-              loggedIn={loggedIn}/>
+              loggedIn={loggedIn}
+              onSubmit={handleUpdateUser}
+              onLogout={handleLogout}/>
             <Route path="/signin">
               <Login onSubmit={handleSignIn}/>
             </Route>

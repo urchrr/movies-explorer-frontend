@@ -68,7 +68,7 @@ const Form = ({onSubmit}) => {
           </label>
           <input className="auth__input page__font page__font_weight_normal"
                  autoComplete={`off`}
-                 type={'text'}
+                 type={'password'}
                  name={'password'}
                  placeholder={'Пароль'}
                  value={data.password}
