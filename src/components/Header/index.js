@@ -6,12 +6,12 @@ import { Route } from "react-router-dom";
 function Header() {
   return (
     <>
-        <Route exact path={["/", "/movies", "/saved-movies", "/profile"]}>
-          <div className="header page__header-footer">
-            <Logo />
-            <Navigation />
-          </div>
-        </Route>
+      <Route exact path={["/", "/movies", "/saved-movies", "/profile"]}>
+        <div className="header page__header-footer">
+          <Logo />
+          <Navigation />
+        </div>
+      </Route>
     </>
   );
 }

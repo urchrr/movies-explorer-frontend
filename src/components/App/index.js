@@ -2,46 +2,99 @@ import "./App.css";
 import Header from "../Header";
 import Footer from "../Footer";
 import Main from "../Main";
-import {Switch, Route, useHistory} from "react-router-dom";
+import { Switch, Route, useHistory } from "react-router-dom";
 import Movies from "../Movies";
 import SavedMovies from "../SavedMovies";
 import NotFound from "../NotFound";
 import Profile from "../Profile";
 import Login from "../Login";
 import Register from "../Register";
-import * as auth from '../../utils/auth';
-import {useEffect, useState} from "react";
-import {CurrentUserContext, UserAuthContext} from "../../contexts";
+import * as auth from "../../utils/auth";
+import { useCallback, useEffect, useState } from "react";
+import { CurrentUserContext, UserAuthContext } from "../../contexts";
 import ProtectedRoute from "../ProtectedRoute";
-import * as api from '../../utils/api'
+import * as api from "../../utils/MainApi";
+import { useGlobalBeats, useGlobalFilms } from "../../contexts/globalhook";
+import * as moviesApi from "../../utils/MoviesApi";
+import { getLS, setLS, chkLS } from "../../utils";
 
 const App = () => {
+  const [beatFilms, beatFilmsAction] = useGlobalBeats();
+  const [currentUserFilms, currentUserFilmsActions] = useGlobalFilms();
   const history = useHistory();
-  const [loggedIn, setLoggedIn] = useState(false)
-  const [currentUser, setCurrentUser] = useState({})
-  const getAuthData = () => {
-    auth.getAuthData()
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
+  const moviesLsKey = "beatfilms";
+  const resultMoviesLsKey = "savedsearch";
+  const usersFilmsLsKey = "userfilms";
+
+  const loginCheck = () => {
+    auth
+      .getAuthData()
       .then((res) => {
         setCurrentUser(res.data);
         setLoggedIn(true);
-        history.push('/movies');
+        history.push("/movies");
       })
-      .catch((err) => console.log(err))
-  }
-  useEffect(() => {
-    getAuthData();
-    if (loggedIn) {
-      //  получить фильмы
-      console.log('Грузим фильмы')
+      .catch((err) => console.log(err));
+  };
+
+  const getFilms = () => {
+    const a = (films, beatFilms) => {
+      let usersFilmsObj = {};
+      films.forEach((i) => (usersFilmsObj[i.movieId] = i));
+      let beatFilmsObj = {};
+      beatFilms.forEach((i) => {
+        if (usersFilmsObj[i.id]) {
+          i.owner = usersFilmsObj[i.id].owner;
+          i._id = usersFilmsObj[i.id]._id;
+        }
+        beatFilmsObj[i.id] = i;
+      });
+      return [usersFilmsObj, beatFilmsObj];
+    };
+    if (!chkLS(moviesLsKey)) {
+      moviesApi
+        .getFilms()
+        .then((beatFilms) => {
+          setLS(moviesLsKey, beatFilms);
+          api
+            .getFilms()
+            .then((films) => {
+              const [uf, bf] = a(films, beatFilms);
+              currentUserFilmsActions.addFilms(uf);
+              beatFilmsAction.addFilms(bf);
+            })
+            .catch((err) => console.log("api-getFilms", err));
+        })
+        .catch((err) => console.log("moviesApi-getFilms", err));
+    } else {
+      api
+        .getFilms()
+        .then((films) => {
+          setLS(usersFilmsLsKey, films);
+          const beatFilms = Object.values(getLS(moviesLsKey));
+          const [uf, bf] = a(films, beatFilms);
+          currentUserFilmsActions.addFilms(uf);
+          beatFilmsAction.addFilms(bf);
+        })
+        .catch((err) => console.log("api-getFilms", err));
     }
-  }, [])
+  };
+
+  useEffect(() => {
+    loginCheck();
+    if (loggedIn) {
+      getFilms();
+    }
+  }, [loggedIn]);
 
   function handleUpdateUser(data) {
     api
       .setUserInfo(data)
       .then((res) => {
-        const {name, email} = res;
-        setCurrentUser({...currentUser, name, email});
+        const { name, email } = res;
+        setCurrentUser({ ...currentUser, name, email });
       })
       .catch((err) => console.log(err));
   }
@@ -50,23 +103,25 @@ const App = () => {
     auth
       .authorize(data)
       .then((data) => {
-        console.log('authorize data', data);
+        console.log("authorize data", data);
         auth
           .getAuthData()
           .then((res) => {
-            console.log('login', res);
+            console.log("login data", res);
             // setUserAuth(res.data);
             setCurrentUser(res.data);
             setLoggedIn(true);
-            history.push('/movies');
+            history.push("/movies");
             // setInfoTipStatus('success');
             // setInfoToolTiOpen(true);
           })
           .catch((err) => {
+            console.log(err);
             // setInfoToolTiOpen(true);
           });
       })
       .catch((err) => {
+        console.log(err);
         // setInfoToolTiOpen(true);
       });
   }
@@ -75,7 +130,7 @@ const App = () => {
     auth
       .signup(data)
       .then(() => {
-        history.push('/signin');
+        history.push("/signin");
       })
       .catch((err) => {
         console.log(err);
@@ -85,45 +140,38 @@ const App = () => {
 
   function handleLogout() {
     setLoggedIn(false);
-    history.push('/');
-    localStorage.setItem('token', '');
+    history.push("/");
+    ["token", moviesLsKey, resultMoviesLsKey, usersFilmsLsKey].forEach((i) =>
+      localStorage.setItem(i, "")
+    );
   }
 
   return (
-    // <div className="App">
     <>
       <CurrentUserContext.Provider value={currentUser}>
-        <UserAuthContext.Provider value={{loggedIn}}>
-          <Header/>
+        <UserAuthContext.Provider value={{ loggedIn }}>
+          <Header />
           <Switch>
             <Route exact path="/">
-              <Main/>
+              <Main />
             </Route>
+            <ProtectedRoute path={"/movies"} component={Movies} />
+            <ProtectedRoute path={"/saved-movies"} component={SavedMovies} />
             <ProtectedRoute
-              path="/movies"
-              component={Movies}
-              loggedIn={loggedIn}/>
-            <ProtectedRoute
-              path={'/saved-movies'}
-              component={SavedMovies}
-              loggedIn={loggedIn}/>
-            <ProtectedRoute
-              path={'/profile'}
+              path={"/profile"}
               component={Profile}
-              loggedIn={loggedIn}
               onSubmit={handleUpdateUser}
-              onLogout={handleLogout}/>
+              onLogout={handleLogout}
+            />
             <Route path="/signin">
-              <Login onSubmit={handleSignIn}/>
+              <Login onSubmit={handleSignIn} />
             </Route>
             <Route path="/signup">
-              <Register onSubmit={handleSignUp}/>
+              <Register onSubmit={handleSignUp} />
             </Route>
-            <Route path="*">
-              <NotFound/>
-            </Route>
+            <Route component={NotFound} />
           </Switch>
-          <Footer/>
+          <Footer />
         </UserAuthContext.Provider>
       </CurrentUserContext.Provider>
     </>

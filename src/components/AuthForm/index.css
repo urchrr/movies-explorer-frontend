@@ -87,9 +87,13 @@
   font-size: 14px;
   line-height: 17px;
 }
-
+.auth__submit:disabled {
+  background: rgba(139, 160, 193, 0.3);
+  pointer-events: none;
+  cursor: none;
+}
 .auth__submit:before {
-  content: '';
+  content: "";
   color: #ffffff;
   position: absolute;
   right: 10%;
@@ -180,5 +184,4 @@
     font-size: 12px;
     line-height: 15px;
   }
-
 }
