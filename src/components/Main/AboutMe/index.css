@@ -55,6 +55,7 @@
   width: 270px;
   height: 327px;
   background-position: center;
+  background-size: contain;
 }
 
 .about-me__link {

@@ -1,12 +1,8 @@
 import "../AuthForm/index.css";
-import Form from '../AuthForm'
+import Form from "../AuthForm";
 
-const Register = ({onSubmit}) => {
-
-  return (
-    <Form onSubmit={onSubmit}/>
-  );
-
+const Register = ({ onSubmit }) => {
+  return <Form onSubmit={onSubmit} />;
 };
 
 export default Register;
