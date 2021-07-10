@@ -39,7 +39,7 @@ const App = () => {
       .catch((err) => console.log(err));
   };
 
-  const getFilms = () => {
+  function getFilms() {
     const a = (films, beatFilms) => {
       let usersFilmsObj = {};
       films.forEach((i) => (usersFilmsObj[i.movieId] = i));
@@ -57,13 +57,14 @@ const App = () => {
       moviesApi
         .getFilms()
         .then((beatFilms) => {
-          setLS(moviesLsKey, beatFilms);
           api
             .getFilms()
             .then((films) => {
               const [uf, bf] = a(films, beatFilms);
               currentUserFilmsActions.addFilms(uf);
               beatFilmsAction.addFilms(bf);
+              setLS(moviesLsKey, bf);
+              setLS(usersFilmsLsKey, uf)
             })
             .catch((err) => console.log("api-getFilms", err));
         })
@@ -73,14 +74,12 @@ const App = () => {
         .getFilms()
         .then((films) => {
           setLS(usersFilmsLsKey, films);
-          const beatFilms = Object.values(getLS(moviesLsKey));
-          const [uf, bf] = a(films, beatFilms);
-          currentUserFilmsActions.addFilms(uf);
-          beatFilmsAction.addFilms(bf);
+          currentUserFilmsActions.addFilms(films);
+          beatFilmsAction.addFilms(getLS(moviesLsKey));
         })
         .catch((err) => console.log("api-getFilms", err));
     }
-  };
+  }
 
   useEffect(() => {
     loginCheck();

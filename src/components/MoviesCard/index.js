@@ -173,7 +173,7 @@ const MoviesCard = (props) => {
         <p className="movie-card__length page__font page__font_weight_normal">
           {state.duration > 60
             ? `${Math.trunc(state.duration / 60)}ч ${state.duration % 60}м`
-            : (state.duraction = 60 ? `1ч` : `${state.duration % 60}м`)}
+            : (state.duraction = 60 ? `60м` : `${state.duration % 60}м`)}
         </p>
         <Route path="/movies">
           <button

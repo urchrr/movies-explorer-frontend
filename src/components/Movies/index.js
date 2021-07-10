@@ -114,7 +114,7 @@ const Movies = () => {
       <Preloader isOpen={showPreloader} />
 
       <MoviesList
-        movies={searchFilms().slice(0, howMuch)}
+        movies={beatFilms.searchedFilms.slice(0, howMuch)}
         isOpen={showResult}
       />
 
