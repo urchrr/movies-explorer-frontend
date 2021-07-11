@@ -79,7 +79,11 @@
   background: #202020;
   border-radius: 50px;
 }
-
+preloader__access {
+  font-size: 40px;
+  line-height: 52px;
+  animation: show__access 3s ease-in-out infinite;
+}
 .preloader__round::after,
 .preloader__round::before {
   content: "";

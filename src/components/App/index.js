@@ -10,13 +10,22 @@ import Profile from "../Profile";
 import Login from "../Login";
 import Register from "../Register";
 import * as auth from "../../utils/auth";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CurrentUserContext, UserAuthContext } from "../../contexts";
 import ProtectedRoute from "../ProtectedRoute";
 import * as api from "../../utils/MainApi";
 import { useGlobalBeats, useGlobalFilms } from "../../contexts/globalhook";
 import * as moviesApi from "../../utils/MoviesApi";
+import InfoToolTip from "../InfoToolTip";
 import { getLS, setLS, chkLS } from "../../utils";
+import {
+  usersFilmsKey,
+  beatFilmsKey,
+  beatFilmsResultSearchKey,
+  usersFilmsResultSearchKey,
+  btSearchTermKey,
+  usrSearchTermKey,
+} from "../../utils/constants";
 
 const App = () => {
   const [beatFilms, beatFilmsAction] = useGlobalBeats();
@@ -24,36 +33,67 @@ const App = () => {
   const history = useHistory();
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
-  const moviesLsKey = "beatfilms";
-  const resultMoviesLsKey = "savedsearch";
-  const usersFilmsLsKey = "userfilms";
-
+  const [infoTipStatus, setInfoTipStatus] = useState("");
+  const [isInfoToolTipOpen, setInfoToolTiOpen] = useState(false);
   const loginCheck = () => {
-    auth
-      .getAuthData()
-      .then((res) => {
-        setCurrentUser(res.data);
-        setLoggedIn(true);
-        history.push("/movies");
-      })
-      .catch((err) => console.log(err));
+    if (chkLS("token")) {
+      auth
+        .getAuthData()
+        .then((res) => {
+          setCurrentUser(res.data);
+          setLoggedIn(true);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      auth
+        .getAuthData()
+        .then((res) => {
+          setCurrentUser(res.data);
+          setLoggedIn(true);
+          history.push("/movies");
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   function getFilms() {
     const a = (films, beatFilms) => {
       let usersFilmsObj = {};
       films.forEach((i) => (usersFilmsObj[i.movieId] = i));
+      console.log("aaa", usersFilmsObj);
       let beatFilmsObj = {};
       beatFilms.forEach((i) => {
+        //если фильм есть в списке от нашего
         if (usersFilmsObj[i.id]) {
           i.owner = usersFilmsObj[i.id].owner;
           i._id = usersFilmsObj[i.id]._id;
+        } else {
+          delete i.owner;
+          delete i._id;
         }
         beatFilmsObj[i.id] = i;
       });
       return [usersFilmsObj, beatFilmsObj];
     };
-    if (!chkLS(moviesLsKey)) {
+
+    const c = (film, beatFilms) => {
+      const usersFilmsObjs = film.reduce((newObj, curr) => {
+        newObj[curr.movieId] = curr;
+        return newObj;
+      });
+      const bObj = beatFilms.reduce((newObj, curr) => {
+        //если фильм есть в списке от нашего
+        if (usersFilmsObjs[curr.id]) {
+          curr.owner = usersFilmsObjs[curr.id].owner;
+          curr._id = usersFilmsObjs[curr.id]._id;
+        }
+        console.log();
+        newObj[curr.id] = curr;
+        return newObj;
+      });
+      return [usersFilmsObjs, bObj];
+    };
+    if (!chkLS(beatFilmsKey)) {
       moviesApi
         .getFilms()
         .then((beatFilms) => {
@@ -62,9 +102,10 @@ const App = () => {
             .then((films) => {
               const [uf, bf] = a(films, beatFilms);
               currentUserFilmsActions.addFilms(uf);
+              currentUserFilmsActions.setSearchedFilms(uf);
               beatFilmsAction.addFilms(bf);
-              setLS(moviesLsKey, bf);
-              setLS(usersFilmsLsKey, uf)
+              setLS(beatFilmsKey, bf);
+              setLS(usersFilmsKey, uf);
             })
             .catch((err) => console.log("api-getFilms", err));
         })
@@ -73,9 +114,12 @@ const App = () => {
       api
         .getFilms()
         .then((films) => {
-          setLS(usersFilmsLsKey, films);
-          currentUserFilmsActions.addFilms(films);
-          beatFilmsAction.addFilms(getLS(moviesLsKey));
+          const [uf, bf] = a(films, Object.values(getLS(beatFilmsKey)));
+          currentUserFilmsActions.addFilms(uf);
+          setLS(usersFilmsKey, uf);
+          setLS(beatFilmsKey, bf);
+          // currentUserFilmsActions.setSearchedFilms(films);
+          beatFilmsAction.addFilms(bf);
         })
         .catch((err) => console.log("api-getFilms", err));
     }
@@ -94,8 +138,13 @@ const App = () => {
       .then((res) => {
         const { name, email } = res;
         setCurrentUser({ ...currentUser, name, email });
+        setInfoTipStatus("success");
+        setInfoToolTiOpen(true);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setInfoToolTiOpen(true);
+      });
   }
 
   function handleSignIn(data) {
@@ -111,17 +160,17 @@ const App = () => {
             setCurrentUser(res.data);
             setLoggedIn(true);
             history.push("/movies");
-            // setInfoTipStatus('success');
-            // setInfoToolTiOpen(true);
+            setInfoTipStatus("success");
+            setInfoToolTiOpen(true);
           })
           .catch((err) => {
             console.log(err);
-            // setInfoToolTiOpen(true);
+            setInfoToolTiOpen(true);
           });
       })
       .catch((err) => {
         console.log(err);
-        // setInfoToolTiOpen(true);
+        setInfoToolTiOpen(true);
       });
   }
 
@@ -133,18 +182,26 @@ const App = () => {
       })
       .catch((err) => {
         console.log(err);
-        // setInfoToolTiOpen(true);
+        setInfoToolTiOpen(true);
       });
   }
 
   function handleLogout() {
     setLoggedIn(false);
     history.push("/");
-    ["token", moviesLsKey, resultMoviesLsKey, usersFilmsLsKey].forEach((i) =>
-      localStorage.setItem(i, "")
-    );
+    [
+      "token",
+      beatFilmsKey,
+      beatFilmsResultSearchKey,
+      usersFilmsKey,
+      usersFilmsResultSearchKey,
+      btSearchTermKey,
+      usrSearchTermKey,
+    ].forEach((i) => localStorage.removeItem(i));
   }
-
+  function close() {
+    setInfoToolTiOpen(false);
+  }
   return (
     <>
       <CurrentUserContext.Provider value={currentUser}>
@@ -170,6 +227,12 @@ const App = () => {
             </Route>
             <Route component={NotFound} />
           </Switch>
+          <InfoToolTip
+            status={infoTipStatus}
+            isOpen={isInfoToolTipOpen}
+            onClose={close}
+            name={"InfoToolTip"}
+          />
           <Footer />
         </UserAuthContext.Provider>
       </CurrentUserContext.Provider>

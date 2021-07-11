@@ -4,7 +4,13 @@ import { useState } from "react";
 import * as api from "../../utils/MainApi";
 import beatFilmsUrl from "../../utils/beatFilmsUrl";
 import { useGlobalBeats, useGlobalFilms } from "../../contexts/globalhook";
-import { shortFilmCheck } from "../../utils";
+import { setLS, shortFilmCheck } from "../../utils";
+import {
+  beatFilmsKey,
+  beatFilmsResultSearchKey,
+  usersFilmsKey,
+  usersFilmsResultSearchKey,
+} from "../../utils/constants";
 
 const MoviesCard = (props) => {
   const [usersFilms, usersFilmsActions] = useGlobalFilms();
@@ -27,7 +33,12 @@ const MoviesCard = (props) => {
       ? "null"
       : card.trailerLink,
     nameRU: card.nameRU === null ? "null" : card.nameRU,
-    nameEN: card.nameEN === null ? "null" : card.nameEN,
+    nameEN:
+      card.nameEN === null
+        ? "null"
+        : card.nameEN === ""
+        ? (card.nameEN = "name")
+        : card.nameEN,
     thumbnail: card.thumbnail
       ? card.thumbnail
       : beatFilmsUrl + card.image.formats.thumbnail.url,
@@ -36,17 +47,9 @@ const MoviesCard = (props) => {
     _id: card._id ? card._id : null,
   });
   function searchFilms() {
-    const { searchTerm, isShortFilm, films } = beatFilms;
-    return Object.values(films).filter((val, idx) => {
-      val.idx = idx;
-      const qt = val.nameRU.toLowerCase().includes(searchTerm.toLowerCase());
-      return searchTerm.length === 0
-        ? isShortFilm
-          ? shortFilmCheck(val.duration)
-          : val
-        : isShortFilm
-        ? qt && shortFilmCheck(val.duration)
-        : qt;
+    const { searchTerm, films } = beatFilms;
+    return Object.values(films).filter((val) => {
+      return val.nameRU.toLowerCase().includes(searchTerm.toLowerCase());
     });
   }
   function handleLikeButton() {
@@ -91,11 +94,24 @@ const MoviesCard = (props) => {
           // setFav(true);
           //обновить стейт сохраненок
           usersFilmsActions.addFilm(movieId, newCard);
+          const n = [...usersFilms.searchedFilms];
+          n.push(newCard);
+          usersFilmsActions.setSearchedFilms(n);
           //обновить стейт с битфильмсом!
           const nb = { ...beatFilms.films };
           nb[movieId].owner = owner;
           nb[movieId]._id = _id;
           beatFilmsAction.addFilms(nb);
+          setLS(beatFilmsKey, nb);
+          const nn = [...beatFilms.searchedFilms];
+          nn.forEach((c) => {
+            if (c.id === newCard.movieId) {
+              c.owner = owner;
+              c._id = _id;
+            }
+          });
+          beatFilmsAction.setSearchedFilms(nn);
+          setLS(beatFilmsResultSearchKey, nn);
         })
         .catch((err) => console.log(err));
     }
@@ -111,17 +127,32 @@ const MoviesCard = (props) => {
         delete nb[movieId].owner;
         delete nb[movieId]._id;
         beatFilmsAction.addFilms(nb);
+        setLS(beatFilmsKey, nb);
+        const nt = [...beatFilms.searchedFilms];
+        nt.forEach((f) => {
+          if (f.id === movieId) {
+            delete f.owner;
+            delete f._id;
+          }
+        });
+        beatFilmsAction.setSearchedFilms(nt);
+        setLS(beatFilmsResultSearchKey, nt);
+        //
         const newCard = { ...state };
         delete newCard.owner;
         delete newCard._id;
         setState(newCard);
+        //
+
         const newObj = { ...usersFilms.films };
-        console.log("delet", newObj);
         delete newObj[movieId];
-        console.log("deleted", newObj);
         usersFilmsActions.addFilms(newObj);
-        const a = searchFilms();
-        usersFilmsActions.setSearchedFilms(a);
+        setLS(usersFilmsKey, newObj);
+        const nn = [...usersFilms.searchedFilms];
+        const nnn = nn.filter((f) => f.movieId !== movieId);
+        usersFilmsActions.setSearchedFilms(nnn);
+        setLS(usersFilmsResultSearchKey, nnn);
+        props.onDelete(movieId);
       })
       .catch((err) => console.log(err));
   }
@@ -165,7 +196,7 @@ const MoviesCard = (props) => {
   };
   return (
     <article className="movie-card">
-      <Help />
+      {/*<Help />*/}
       <div className="movie-card__info">
         <h3 className="movie-card__title page__font page__font_weight_bold">
           {state.nameRU}

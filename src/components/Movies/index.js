@@ -3,80 +3,102 @@ import SearchForm from "../SearchForm";
 import MoviesList from "../MoviesCardList";
 import Preloader from "../Preloader";
 import { useEffect, useState } from "react";
-import useWindowDimensions from "../../utils/useWindowDimensions";
-import { shortFilmCheck, sleep } from "../../utils";
-
+import { searchF, shortFilmCheck, sleep } from "../../utils";
+import { getLS, setLS, chkLS } from "../../utils";
 import { useGlobalBeats } from "../../contexts/globalhook";
+import { useMoreNumbers } from "../../utils/hooks";
+import {
+  beatFilmsKey,
+  beatFilmsResultSearchKey,
+  usersFilmsKey,
+} from "../../utils/constants";
 
 const Movies = () => {
+  const keyLS = beatFilmsResultSearchKey;
   const [beatFilms, beatFilmsAction] = useGlobalBeats();
-  const { width } = useWindowDimensions();
-  const [shortFilmTrigger, setShortFilm] = useState(beatFilms.isShortFilm);
+  const { films, isShortFilm, searchedFilms, searchTerm } = beatFilms;
+  // const [shortFilmTrigger, setShortFilm] = useState(beatFilms.isShortFilm);
   //
+
   const [showEmpty, setEmpty] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [showPreloader, setShowPreloader] = useState(false);
   const [showResult, setShowResult] = useState(false);
+  const [st, set] = useState(searchedFilms);
   //
-  let initialCardsNumber = width >= 1280 ? 12 : width >= 768 ? 8 : 5;
-  let numberMore = width > 1200 ? 3 : 2;
+  const { initialCardsNumber, numberMore } = useMoreNumbers();
   const [howMuch, setHowMuch] = useState(initialCardsNumber);
 
+  // useEffect(() => {
+  //   if (chkLS(keyLS)) {
+  //     setShowResult(true);
+  //   } else {
+  //     setShowResult(false);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   const films = getLS(beatFilmsKey);
+  //   if (chkLS("btword")) {
+  //     const s = getLS("btword");
+  //     const f = searchF(Object.values(films), s);
+  //     beatFilmsAction.setSearchedFilms(f);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   function dos() {
+  //     beatFilmsAction.setShortFilm();
+  //     beatFilmsAction.setShortFilm();
+  //   }
+  //   setTimeout(dos, 100);
+  // }, []);
+
   useEffect(() => {
-    const a = searchFilms();
-    beatFilmsAction.setSearchedFilms(a);
-    if (beatFilms.searchedFilms.length > 0) {
-      setShowResult(true);
+    if (chkLS("btword") !== "") {
+      console.log("uf true");
+      if (isShortFilm) {
+        // usersFilmsActions.setSearchedFilms(qt);
+        set(
+          searchedFilms
+            .filter((val) => shortFilmCheck(val.duration))
+            .slice(0, howMuch)
+        );
+        setShowResult(true);
+      } else {
+        // usersFilmsActions.setSearchedFilms(r);
+        set(searchedFilms.slice(0, howMuch));
+        setShowResult(true);
+      }
     } else {
+      console.log("uf false");
       setShowResult(false);
+      set([]);
     }
-  }, []);
+  }, [isShortFilm, howMuch, searchedFilms]);
 
   function handleMore() {
     setHowMuch(howMuch + numberMore);
-    // const len = searchFilms().length;
-    // if (len - howMuch < numberMore) {
-    //   setHowMuch(len);
-    // } else {
-    //   setHowMuch(howMuch + numberMore);
-    // }
   }
   function handleFilter() {
-    setShortFilm(!shortFilmTrigger);
+    // setShortFilm(!shortFilmTrigger);
     beatFilmsAction.setShortFilm();
   }
 
   async function handleSearch() {
+    //сбрасываем отображение инфо модулей
     setShowAlert(false);
     setEmpty(false);
     setShowResult(false);
-    if (beatFilms.searchTerm !== "") {
+    //если поисковая строка не пустая
+    if (getLS("btword") !== "") {
       //сбрасываем кнопку ещё
       setHowMuch(initialCardsNumber);
-      //сбрасываем отображение инфо модулей
       setShowPreloader(true);
-      //делаем поиск по фильмам
-      const a = searchFilms();
-      beatFilmsAction.setSearchedFilms(a);
-      await showSearchResult(a);
+      await showSearchResult(getLS(keyLS));
     } else {
       setEmpty(true);
     }
-  }
-
-  function searchFilms() {
-    const { searchTerm, isShortFilm, films } = beatFilms;
-    return Object.values(films).filter((val, idx) => {
-      val.idx = idx;
-      const qt = val.nameRU.toLowerCase().includes(searchTerm.toLowerCase());
-      return searchTerm.length === 0
-        ? isShortFilm
-          ? shortFilmCheck(val.duration)
-          : val
-        : isShortFilm
-        ? qt && shortFilmCheck(val.duration)
-        : qt;
-    });
   }
   async function showSearchResult(res) {
     const delay = 1000;
@@ -92,11 +114,31 @@ const Movies = () => {
     }
   }
 
+  function result() {
+    if (chkLS(keyLS)) {
+      const r = getLS(keyLS);
+      if (isShortFilm) {
+        return r
+          .filter((val) => shortFilmCheck(val.duraction))
+          .slice(0, howMuch);
+      } else {
+        return r.slice(0, howMuch);
+      }
+    } else {
+      return null;
+    }
+  }
+  function showMoreButton() {
+    if (chkLS(keyLS)) {
+      return !(howMuch >= st.length);
+    } else return false;
+  }
   return (
     <>
       <SearchForm
-        value={beatFilms.searchTerm}
-        onChangeInput={beatFilmsAction.setSearchTerm}
+        source={beatFilms}
+        actions={beatFilmsAction}
+        keyLS={keyLS}
         checkboxValue={beatFilms.isShortFilm}
         onChangeCheckbox={handleFilter}
         onSearch={handleSearch}
@@ -113,10 +155,7 @@ const Movies = () => {
       )}
       <Preloader isOpen={showPreloader} />
 
-      <MoviesList
-        movies={beatFilms.searchedFilms.slice(0, howMuch)}
-        isOpen={showResult}
-      />
+      <MoviesList movies={st} isOpen={showResult} />
 
       {!(howMuch >= beatFilms.searchedFilms.length) && (
         <button

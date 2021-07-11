@@ -1,20 +1,23 @@
 import "./index.css";
-import { useState, useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { CurrentUserContext } from "../../contexts";
-import { useFormWithValidation } from "../../utils/hooks";
 
 const Profile = ({ onSubmit, onLogout }) => {
   const currentUser = useContext(CurrentUserContext);
-  const { values, handleChange, errors, isValid, resetForm } =
-    useFormWithValidation({
-      name: currentUser.name,
-      email: currentUser.email,
-    });
+  const { name, email } = currentUser;
+  const [values, setValues] = React.useState({ name, email });
+  const [errors, setErrors] = React.useState({});
 
-  const [info, setInfo] = useState({});
-  const handleInput = (evt) => {
-    const { name, value } = evt.target;
-    setInfo({ ...info, [name]: value });
+  const [isValid, setIsValid] = React.useState(false);
+  useEffect(() => {
+    setValues({ name, email });
+  }, []);
+  const handleChange = (event) => {
+    const { target } = event;
+    const { value, name } = target;
+    setValues({ ...values, [name]: value });
+    setErrors({ ...errors, [name]: target.validationMessage });
+    setIsValid(target.closest("form").checkValidity());
   };
 
   function handleSubmit(e) {
@@ -41,6 +44,7 @@ const Profile = ({ onSubmit, onLogout }) => {
             id="profile-name"
             required
             minLength={4}
+            placeholder={name}
             className="profile__input page__font page__font_weight_normal"
             value={values.name}
           />
@@ -60,6 +64,7 @@ const Profile = ({ onSubmit, onLogout }) => {
             name="email"
             required
             minLength={4}
+            placeholder={email}
             id="profile-email"
             className="profile__input page__font page__font_weight_normal"
             value={values.email}

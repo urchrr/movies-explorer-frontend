@@ -3,7 +3,7 @@ import MoviesCard from "../MoviesCard";
 import { useState } from "react";
 import useWindowDimensions from "../../utils/useWindowDimensions";
 
-const MoviesList = ({ movies, isOpen }) => {
+const MoviesList = ({ movies, isOpen, onDelete }) => {
   const { width, height } = useWindowDimensions();
   const [trailerSrc, setTrailerSrc] = useState("");
   const [trailerOpen, setTrailerOpen] = useState(false);
@@ -23,9 +23,15 @@ const MoviesList = ({ movies, isOpen }) => {
       }`}
     >
       <div className="movie-list__cards">
-        {movies.map((i) => (
-          <MoviesCard key={i.id} card={i} onImgClick={handleIframe} />
-        ))}
+        {movies &&
+          movies.map((i) => (
+            <MoviesCard
+              key={i.id}
+              card={i}
+              onImgClick={handleIframe}
+              onDelete={onDelete}
+            />
+          ))}
       </div>
 
       <div

@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-
+import useWindowDimensions from "./useWindowDimensions";
 //хук управления формой
 export function useForm() {
   const [values, setValues] = React.useState({});
@@ -36,4 +36,11 @@ export function useFormWithValidation(initialValues) {
   );
 
   return { values, handleChange, errors, isValid, resetForm };
+}
+
+export function useMoreNumbers() {
+  const { width } = useWindowDimensions();
+  let initialCardsNumber = width >= 1280 ? 12 : width >= 768 ? 8 : 5;
+  let numberMore = width > 1200 ? 3 : 2;
+  return { initialCardsNumber, numberMore };
 }

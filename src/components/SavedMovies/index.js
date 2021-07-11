@@ -2,62 +2,149 @@ import "./index.css";
 import SearchForm from "../SearchForm";
 import MoviesList from "../MoviesCardList";
 import * as api from "../../utils/MainApi";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as moviesApi from "../../utils/MoviesApi";
-import { shortFilmCheck, sleep } from "../../utils";
+import {
+  chkLS,
+  getLS,
+  searchF,
+  setLS,
+  shortFilmCheck,
+  sleep,
+} from "../../utils";
 import { useGlobalFilms } from "../../contexts/globalhook";
+import {
+  usersFilmsKey,
+  usersFilmsResultSearchKey,
+  usrSearchTermKey,
+} from "../../utils/constants";
+import Preloader from "../Preloader";
 
 const SavedMovies = () => {
+  const keyLS = usersFilmsResultSearchKey;
   const [usersFilms, usersFilmsActions] = useGlobalFilms();
-  const { films } = usersFilms;
-  const [shortFilm, setShortFilm] = useState(false);
+  const { films, isShortFilm, searchedFilms, searchTerm } = usersFilms;
   const [showResult, setShowResult] = useState(true);
   const [showAlert, setShowAlert] = useState(false);
+  const [st, set] = useState(searchedFilms);
+  // const [showEmpty, setEmpty] = useState(false);
+  // const [showPreloader, setShowPreloader] = useState(false);
+  //
+
+  // useEffect(() => {
+  //   const films = getLS(usersFilmsKey);
+  //   if (chkLS("usrword")) {
+  //     const s = getLS("usrword");
+  //     usersFilmsActions.setSearchedFilms(searchF(Object.values(films), s));
+  //   } else {
+  //     usersFilmsActions.setSearchedFilms(Object.values(films));
+  //   }
+  // }, []);
+  //
+  // useEffect(() => {
+  //   function dos() {
+  //     usersFilmsActions.setShortFilm();
+  //     usersFilmsActions.setShortFilm();
+  //   }
+  //   setTimeout(dos, 100);
+  // }, []);
+
+  // useEffect(() => {
+  //   const r = usersFilms.searchedFilms;
+  //   const { isShortFilm } = usersFilms;
+  //   if (usersFilms.searchTerm !== "") {
+  //     if (isShortFilm) {
+  //       // usersFilmsActions.setSearchedFilms(qt);
+  //       set(r.filter((val) => shortFilmCheck(val.duraction)));
+  //     } else {
+  //       // usersFilmsActions.setSearchedFilms(r);
+  //       set(r);
+  //     }
+  //   } else {
+  //     set(false);
+  //   }
+  // }, [usersFilms.isShortFilm]);
+
+  function handleFilter() {
+    usersFilmsActions.setShortFilm();
+  }
   //
   useEffect(() => {
-    const a = searchFilms();
-    usersFilmsActions.setSearchedFilms(a);
-  }, []);
-
-  function searchFilms() {
-    const { searchTerm, isShortFilm, films } = usersFilms;
-    return Object.values(films).filter((val, idx) => {
-      val.idx = idx;
-      const qt = val.nameRU.toLowerCase().includes(searchTerm.toLowerCase());
-      return searchTerm.length === 0
-        ? isShortFilm
-          ? shortFilmCheck(val.duration)
-          : val
-        : isShortFilm
-        ? qt && shortFilmCheck(val.duration)
-        : qt;
-    });
-  }
-  function handleFilter() {
-    setShortFilm(!shortFilm);
-    usersFilmsActions.setShortFilm(!usersFilms.isShortFilm);
-  }
-  //
-
-  function handleSearch() {
-    setShowAlert(false);
-    const a = searchFilms();
-    usersFilmsActions.setSearchedFilms(a);
-    if (a.length === 0) {
-      //если длина массива искомых фильмов нулевая - показать не найдено
-      setShowAlert(true);
-      setShowResult(false);
+    console.log("ufee");
+    if (chkLS(usrSearchTermKey) !== "") {
+      console.log("uf true");
+      if (isShortFilm) {
+        // usersFilmsActions.setSearchedFilms(qt);
+        console.log("ufee s", searchedFilms);
+        set(searchedFilms.filter((val) => shortFilmCheck(val.duration)));
+        setShowResult(true);
+      } else {
+        // usersFilmsActions.setSearchedFilms(r);
+        console.log("ufee s", searchedFilms);
+        set(searchedFilms);
+        setShowResult(true);
+      }
     } else {
+      console.log("uf false");
+      setShowResult(false);
+      set([]);
+    }
+  }, [isShortFilm, searchedFilms]);
+
+  async function handleSearch() {
+    setShowAlert(false);
+    // setEmpty(false);
+    setShowResult(false);
+    if (usersFilms.searchTerm !== "") {
+      // setShowPreloader(true);
+      await showSearchResult(getLS(keyLS));
+    } else {
+      await showSearchResult(getLS(usersFilmsKey));
+    }
+  }
+
+  async function showSearchResult(res) {
+    const delay = 100;
+    if (res.length === 0) {
+      //если длина массива искомых фильмов нулевая - показать не найдено
+      await sleep(delay);
+      // setShowPreloader(false);
+      setShowAlert(true);
+    } else if (res.length > 0) {
+      await sleep(delay);
+      // setShowPreloader(false);
       setShowResult(true);
     }
   }
 
+  const result = () => {
+    if (usersFilms.searchTerm !== 0) {
+      const r = usersFilms.searchedFilms;
+      const { isShortFilm } = usersFilms;
+      if (isShortFilm) {
+        // usersFilmsActions.setSearchedFilms(qt);
+        return r.filter((val) => shortFilmCheck(val.duraction));
+      } else {
+        // usersFilmsActions.setSearchedFilms(r);
+        return r;
+      }
+    } else {
+      return false;
+    }
+  };
+  function onDelete(movieId) {
+    console.log("on delete", movieId);
+    console.log(st);
+    const nn = [...st];
+    const nnn = nn.filter((f) => f.movieId.toString() !== movieId.toString());
+    set(nnn);
+  }
   return (
     <>
       <SearchForm
-        value={usersFilms.searchTerm}
-        onChangeInput={usersFilmsActions.setSearchTerm}
-        checkboxValue={usersFilms.isShortFilm}
+        source={usersFilms}
+        actions={usersFilmsActions}
+        keyLS={keyLS}
         onChangeCheckbox={handleFilter}
         onSearch={handleSearch}
       />
@@ -66,7 +153,13 @@ const SavedMovies = () => {
           Ничего не найдено{" "}
         </p>
       )}
-      <MoviesList movies={searchFilms()} isOpen={showResult} />
+      {/*{showEmpty && (*/}
+      {/*  <p className={"page__font"} style={{ marginTop: "50px" }}>*/}
+      {/*    Введите ключевое слово{" "}*/}
+      {/*  </p>*/}
+      {/*)}*/}
+      {/*<Preloader isOpen={showPreloader} />*/}
+      <MoviesList movies={st} isOpen={showResult} onDelete={onDelete} />
     </>
   );
 };

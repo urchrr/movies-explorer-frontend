@@ -1,18 +1,33 @@
 import React from "react";
 import globalHook from "use-global-hook";
+import { chkLS, getLS, searchF } from "../utils";
+import {
+  beatFilmsKey,
+  btSearchTermKey,
+  usersFilmsKey,
+  usrSearchTermKey,
+} from "../utils/constants";
 
 const beatsInitialState = {
-  films: {},
-  searchTerm: "",
+  films: chkLS(beatFilmsKey) ? getLS(beatFilmsKey) : {},
+  searchTerm: chkLS(btSearchTermKey) ? getLS(btSearchTermKey) : "",
   isShortFilm: false,
-  searchedFilms: [],
+  lsKey: btSearchTermKey,
+  searchedFilms:
+    chkLS(beatFilmsKey) && chkLS(btSearchTermKey)
+      ? searchF(Object.values(getLS(beatFilmsKey)), getLS(btSearchTermKey))
+      : [],
 };
 
 //
 const filmsInitialState = {
-  films: {},
-  searchTerm: "",
+  films: chkLS(usersFilmsKey) ? getLS(usersFilmsKey) : {},
+  searchTerm: chkLS(usrSearchTermKey) ? getLS(usrSearchTermKey) : "",
   isShortFilm: false,
+  lsKey: usrSearchTermKey,
+  searchedFilms: chkLS(usersFilmsKey)
+    ? Object.values(getLS(usersFilmsKey))
+    : [],
 };
 
 const actions = {

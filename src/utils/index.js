@@ -1,5 +1,6 @@
+import { shortFilmLength } from "./constants";
 export const shortFilmCheck = (length) => {
-  return length <= 40;
+  return length <= shortFilmLength;
 };
 
 export function sleep(ms) {
@@ -7,7 +8,7 @@ export function sleep(ms) {
 }
 
 export function chkLS(key) {
-  return localStorage.getItem(key);
+  return !!localStorage.getItem(key);
 }
 
 export function getLS(key) {
@@ -16,4 +17,14 @@ export function getLS(key) {
 
 export function setLS(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
+}
+
+export function searchF(array, string) {
+  console.log("s f", array, string);
+  if (string !== "") {
+    return array.filter((val) => {
+      console.log(val, string);
+      return val.nameRU.toLowerCase().includes(string.toLowerCase());
+    });
+  } else return [];
 }
