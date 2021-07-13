@@ -1,8 +1,15 @@
 .movie-list {
   padding-top: 70px;
   padding-bottom: 80px;
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
 }
-
+.movie-list__opened {
+  height: 100%;
+  opacity: 1;
+  visibility: visible;
+}
 .movie-list__more {
   cursor: pointer;
   font-size: 12px;
@@ -22,7 +29,27 @@
   gap: 24px 30px;
   padding-bottom: 30px;
 }
-
+.movie-list__popup {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  visibility: hidden;
+  height: 0;
+  width: 100%;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, .3);
+}
+.movie-list__popup_opened {
+  visibility: visible;
+  height: 100%;
+  opacity: 1;
+}
 @media screen and (max-width: 1070px) {
   .movie-list__cards {
     grid-template-columns: repeat(2, minmax(300px, 1fr));

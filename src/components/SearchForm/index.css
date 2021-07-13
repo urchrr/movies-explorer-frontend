@@ -2,39 +2,6 @@
   padding-top: 70px;
 }
 
-.seacrh-form__button {
-  font-size: 11px;
-  line-height: 18px;
-  text-align: center;
-  background-color: #4285f4;
-  border-radius: 48px;
-  margin-right: 31px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  width: 58px;
-  height: 34px;
-  box-sizing: border-box;
-}
-
-.search-form__icon {
-  width: 34px;
-  height: 34px;
-}
-
-.search-form__input {
-  font-size: 28px;
-  line-height: 34px;
-  text-align: center;
-  color: #8b8b8b;
-  background-color: inherit;
-  border: none;
-  width: 100%;
-}
-
-.search-form__input:focus {
-  outline: none;
-}
-
 .search-form__wrapper {
   display: grid;
   position: relative;
@@ -44,6 +11,54 @@
   box-sizing: border-box;
 }
 
+.search-form__input {
+  border-radius: 48px;
+  position: absolute;
+  top: 0;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+  font-size: 28px;
+  line-height: 34px;
+  text-align: center;
+  color: #8b8b8b;
+  background-color: inherit;
+  border: none;
+  width: 100%;
+  z-index: 0;
+}
+.search-form__input:hover {
+  box-shadow: 0 10px 5px 5px rgba(242, 242, 242, 0.48);
+}
+.search-form__input:focus {
+  outline: none;
+}
+.search-form__button {
+  box-shadow: 0 0 7px 0 #4285f4;
+  position: absolute;
+  right: 0;
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+  background-color: #4285f4;
+  border-radius: 48px;
+  margin-left: 31px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  width: 58px;
+  height: 34px;
+  box-sizing: border-box;
+}
+.search-form__button:disabled {
+  background-color: rgba(129, 138, 158, 0.34);
+  pointer-events: none;
+  cursor: none;
+}
+.search-form__icon {
+  width: 34px;
+  height: 34px;
+  z-index: 1;
+}
 .search-from__checkbox {
   padding-top: 30px;
   display: flex;
@@ -59,6 +74,7 @@
 
 @media screen and (max-width: 520px) {
   .search-form__wrapper {
+    height: 52px;
     grid-template-columns: auto 60px;
   }
 
@@ -67,7 +83,9 @@
     line-height: 22px;
     text-align: start;
   }
-
+  .search-form__input:hover {
+    box-shadow: 0 3px 2px 2px rgba(242, 242, 242, 0.48);
+  }
   .search-form {
     padding-bottom: 50px;
   }

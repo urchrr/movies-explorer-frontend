@@ -1,30 +1,56 @@
 import "./index.css";
 import MoviesCard from "../MoviesCard";
-import Image from "../../images/card_pic.png";
-const MoviesList = () => {
-  const card = {
-    title: "33 слова о дизайне",
-    info: "1ч 47м",
-    img: Image,
-  };
-  const cards = () => {
-    const c = [];
-    for (let i = 0; i < 12; i++) {
-      c.push(card);
-    }
-    return c;
-  };
+import { useState } from "react";
+import useWindowDimensions from "../../utils/useWindowDimensions";
 
+const MoviesList = ({ movies, isOpen, onDelete }) => {
+  const { width, height } = useWindowDimensions();
+  const [trailerSrc, setTrailerSrc] = useState("");
+  const [trailerOpen, setTrailerOpen] = useState(false);
+  function handleIframe(src) {
+    console.log(src);
+    const newSrc = src.replace("https://www.youtube.com/watch?v=", "");
+    setTrailerSrc(newSrc);
+    setTrailerOpen(true);
+  }
+  function handleClose() {
+    setTrailerOpen(false);
+  }
   return (
-    <section className="movie-list page__section">
+    <section
+      className={`movie-list page__section ${
+        isOpen ? "movie-list__opened" : ""
+      }`}
+    >
       <div className="movie-list__cards">
-        {cards().map((i) => (
-          <MoviesCard title={i.title} length={i.info} img={i.img} />
-        ))}
+        {movies &&
+          movies.map((i) => (
+            <MoviesCard
+              key={i.id}
+              card={i}
+              onImgClick={handleIframe}
+              onDelete={onDelete}
+            />
+          ))}
       </div>
-      <button className="movie-list__more page__font page_font_weight_bold">
-        Eщё
-      </button>
+
+      <div
+        className={`movie-list__popup ${
+          trailerOpen ? "movie-list__popup_opened" : ""
+        }`}
+        onClick={handleClose}
+      >
+        {trailerOpen && (
+          <iframe
+            id="ytplayer"
+            type="text/html"
+            width={width * 0.8}
+            height={height * 0.6}
+            src={`https://www.youtube.com/embed/${trailerSrc}`}
+            frameBorder="0"
+          />
+        )}
+      </div>
     </section>
   );
 };
